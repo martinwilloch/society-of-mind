@@ -83,7 +83,7 @@
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
+      transform: translate(-50%, -50%) translateY(14px) scale(0.97);
       z-index: 20;
       width: min(560px, 92vw);
       max-height: 80vh;
@@ -97,14 +97,15 @@
         0 2px 8px rgba(45, 27, 105, 0.08);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
       overflow: hidden;
     }
 
     #panel.visible {
       opacity: 1;
       pointer-events: all;
-      transform: translate(-50%, -50%) scale(1);
+      transform: translate(-50%, -50%) translateY(0) scale(1);
     }
 
     #panel-scroll {
@@ -649,21 +650,21 @@ function draw(ts) {
     }
 
     if (active) {
-      // Peripheral ring — transparent interior
+      // Peripheral ring — transparent interior between ring and core
       ctx.beginPath();
       ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
       ctx.strokeStyle = col;
       ctx.lineWidth = 1.5;
       ctx.stroke();
-    } else {
-      // Core dot only when at rest
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = COL_NODE;
-      ctx.globalAlpha = 0.5;
-      ctx.fill();
-      ctx.globalAlpha = 1;
     }
+
+    // Core dot — always visible, slightly more prominent when active
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, active ? 3 : 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.globalAlpha = active ? 1 : 0.5;
+    ctx.fill();
+    ctx.globalAlpha = 1;
 
     // Label — always visible, fixed position so it doesn't jump
     ctx.font = `${active ? 500 : 400} 12px 'Lora', Georgia, serif`;
