@@ -635,13 +635,12 @@ function draw(ts) {
     const active = n.hovered || isSelected || isConn;
     const pulse = 1 + Math.sin(n.pulse) * 0.1;
     const r = n.r * (isSelected ? 1.5 : n.hovered ? 1.3 : isConn ? 1.15 : 1) * pulse;
-    const coreR = isSelected ? 3.5 : n.hovered ? 3 : isConn ? 2.5 : 2;
     const col = isSelected ? COL_NODE_SEL : n.hovered ? COL_NODE_HOV : isConn ? '#5B3FA0' : COL_NODE;
 
-    // Soft glow on active
-    if (isSelected || n.hovered) {
-      const grd = ctx.createRadialGradient(n.x, n.y, r, n.x, n.y, r * 3.2);
-      grd.addColorStop(0, rgba(COL_CONN_HOV, 0.14));
+    // Soft glow behind the ring when active
+    if (active) {
+      const grd = ctx.createRadialGradient(n.x, n.y, r * 0.5, n.x, n.y, r * 3.2);
+      grd.addColorStop(0, rgba(COL_CONN_HOV, 0.13));
       grd.addColorStop(1, rgba(COL_CONN_HOV, 0));
       ctx.beginPath();
       ctx.arc(n.x, n.y, r * 3.2, 0, Math.PI * 2);
@@ -649,31 +648,29 @@ function draw(ts) {
       ctx.fill();
     }
 
-    // Outer ring (stroke only — transparent interior)
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.strokeStyle = col;
-    ctx.lineWidth = active ? 1.5 : 1;
-    ctx.globalAlpha = active ? 1 : 0.55;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-
-    // Core dot
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, coreR, 0, Math.PI * 2);
-    ctx.fillStyle = col;
-    ctx.globalAlpha = active ? 1 : 0.55;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    // Label — only when active
     if (active) {
-      ctx.font = `${isSelected ? 500 : 400} 12px 'Lora', Georgia, serif`;
-      ctx.fillStyle = `rgba(45,27,105,${isSelected ? 1 : 0.85})`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText(n.label, n.x, n.y + r + 6);
+      // Peripheral ring — transparent interior
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    } else {
+      // Core dot only when at rest
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = COL_NODE;
+      ctx.globalAlpha = 0.5;
+      ctx.fill();
+      ctx.globalAlpha = 1;
     }
+
+    // Label — always visible, fixed position so it doesn't jump
+    ctx.font = `${active ? 500 : 400} 12px 'Lora', Georgia, serif`;
+    ctx.fillStyle = `rgba(45,27,105,${active ? 0.95 : 0.55})`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(n.label, n.x, n.y + n.r + 7);
   });
 
   canvas.style.cursor = hoveredNode ? 'pointer' : 'default';
