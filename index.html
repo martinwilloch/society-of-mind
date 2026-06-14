@@ -6,198 +6,110 @@
   <title>Society of Mind — Marvin Minsky</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #EFE5C4;
-      --p900: #160A3A;
-      --p800: #1E0F4A;
-      --p700: #2D1B69;
-      --p600: #4A2F8F;
-      --p500: #6B4FB8;
-      --p400: #9177D0;
-      --p100: rgba(22,10,58,0.07);
+      --bg: #F4EDD8;
+      --purple: #2D1B69;
+      --purple-mid: #4A2F8F;
+      --purple-light: #7B5EA7;
+      --purple-faint: rgba(45, 27, 105, 0.12);
+      --panel-bg: rgba(244, 237, 216, 0.97);
     }
 
     html, body {
       width: 100%; height: 100%;
       background: var(--bg);
+      color: var(--purple);
+      font-family: 'Inter', sans-serif;
       overflow: hidden;
     }
 
-    /* Grain overlay */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 3;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity: 0.028;
-      mix-blend-mode: multiply;
-    }
-
-    /* Vignette */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 3;
-      pointer-events: none;
-      background: radial-gradient(ellipse 110% 90% at 50% 48%, transparent 48%, rgba(22,10,58,0.14) 100%);
-    }
-
     canvas {
-      position: fixed; inset: 0; z-index: 1;
-      cursor: default;
+      position: fixed;
+      inset: 0;
+      width: 100%; height: 100%;
     }
 
-    /* ── Header ──────────────────────────────── */
+    /* Header */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 10;
-      padding: 2.6rem 3rem 3.5rem;
+      padding: 2.2rem 3rem 2rem;
       pointer-events: none;
-      background: linear-gradient(180deg,
-        var(--bg) 0%,
-        rgba(239,229,196,0.85) 60%,
-        transparent 100%);
+      background: linear-gradient(to bottom, var(--bg) 55%, transparent);
     }
 
     header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.9rem, 4.5vw, 3.4rem);
-      font-weight: 400;
-      letter-spacing: 0.015em;
-      color: var(--p800);
-      line-height: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--purple);
+      line-height: 1.1;
     }
 
-    .header-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-top: 0.55rem;
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(0.64rem, 1.1vw, 0.75rem);
-      font-weight: 300;
+    header p {
+      margin-top: 0.35rem;
+      font-size: clamp(0.68rem, 1.2vw, 0.8rem);
+      font-weight: 400;
+      color: var(--purple-light);
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--p500);
     }
 
-    .header-rule {
-      width: 28px; height: 1px;
-      background: var(--p400);
-      flex-shrink: 0;
-    }
-
-    /* ── Top-right badge ─────────────────────── */
-    #badge {
-      position: fixed;
-      top: 2.6rem; right: 3rem;
-      z-index: 10;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--p400);
-      pointer-events: none;
-    }
-
-    /* ── Hint ────────────────────────────────── */
+    /* Hint */
     #hint {
       position: fixed;
-      bottom: 2.4rem; left: 50%;
+      bottom: 2rem;
+      left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      display: flex; align-items: center; gap: 0.7rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.67rem;
+      font-size: 0.68rem;
       font-weight: 400;
-      letter-spacing: 0.16em;
+      color: var(--purple-light);
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--p400);
       pointer-events: none;
       white-space: nowrap;
-      animation: breathe 3.5s ease-in-out infinite;
-      transition: opacity 1.2s ease;
-    }
-
-    .hint-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--p400);
-      flex-shrink: 0;
-    }
-
-    @keyframes breathe {
-      0%,100% { opacity: 0.55; }
-      50%      { opacity: 1; }
-    }
-
-    /* ── Overlay ─────────────────────────────── */
-    #overlay {
-      position: fixed; inset: 0;
-      z-index: 15;
-      background: rgba(22,10,58,0.1);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-
-    #overlay.visible {
       opacity: 1;
-      pointer-events: all;
+      transition: opacity 1s ease;
     }
 
-    /* ── Panel ───────────────────────────────── */
+    /* Info panel */
     #panel {
       position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) translateY(16px);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
       z-index: 20;
-      width: min(600px, 92vw);
-      max-height: 82vh;
-      display: flex; flex-direction: column;
-      background: rgba(242,234,208,0.93);
-      backdrop-filter: blur(24px) saturate(1.4);
-      -webkit-backdrop-filter: blur(24px) saturate(1.4);
-      border: 1px solid rgba(74,47,143,0.13);
-      border-top: none;
+      width: min(560px, 92vw);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--panel-bg);
+      border: 1px solid var(--purple-faint);
       box-shadow:
-        0 0 0 0.5px rgba(22,10,58,0.06),
-        0 2px 4px  rgba(22,10,58,0.04),
-        0 8px 24px rgba(22,10,58,0.10),
-        0 28px 56px rgba(22,10,58,0.08);
+        0 0 0 1px var(--purple-faint),
+        0 8px 48px rgba(45, 27, 105, 0.16),
+        0 2px 8px rgba(45, 27, 105, 0.08);
       opacity: 0;
       pointer-events: none;
-      transition:
-        opacity  0.38s cubic-bezier(0.16,1,0.3,1),
-        transform 0.38s cubic-bezier(0.16,1,0.3,1);
+      transition: opacity 0.3s ease, transform 0.3s ease;
       overflow: hidden;
     }
 
     #panel.visible {
       opacity: 1;
       pointer-events: all;
-      transform: translate(-50%, -50%) translateY(0);
-    }
-
-    /* Accent bar */
-    #panel-accent {
-      height: 2px;
-      background: linear-gradient(90deg,
-        var(--p700) 0%,
-        var(--p500) 55%,
-        transparent 100%);
-      flex-shrink: 0;
+      transform: translate(-50%, -50%) scale(1);
     }
 
     #panel-scroll {
-      padding: 1.8rem 2.4rem 2.2rem;
+      padding: 2.2rem 2.6rem 2rem;
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
@@ -206,140 +118,78 @@
     #panel-scroll::-webkit-scrollbar { width: 3px; }
     #panel-scroll::-webkit-scrollbar-track { background: transparent; }
     #panel-scroll::-webkit-scrollbar-thumb {
-      background: rgba(74,47,143,0.2);
+      background: var(--purple-faint);
       border-radius: 2px;
     }
 
-    /* Close button */
     #panel-close {
-      position: absolute; top: 0.9rem; right: 1rem;
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(22,10,58,0.05);
-      border: 1px solid rgba(22,10,58,0.08);
-      border-radius: 50%;
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none;
+      border: none;
       cursor: pointer;
-      font-size: 1.05rem;
+      font-size: 1.3rem;
+      color: var(--purple-light);
       line-height: 1;
-      color: var(--p500);
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
-    }
-
-    #panel-close:hover {
-      background: rgba(22,10,58,0.09);
-      color: var(--p800);
-      border-color: rgba(22,10,58,0.14);
-    }
-
-    /* Chapter label */
-    #panel-chapter {
+      padding: 0.25rem 0.4rem;
+      transition: color 0.2s;
       font-family: 'Inter', sans-serif;
+    }
+
+    #panel-close:hover { color: var(--purple); }
+
+    #panel-chapter {
       font-size: 0.62rem;
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--p500);
-      margin-bottom: 0.45rem;
+      color: var(--purple-light);
+      margin-bottom: 0.5rem;
     }
 
-    /* Title */
     #panel-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.55rem, 3.5vw, 2.15rem);
-      font-weight: 400;
-      font-style: italic;
-      color: var(--p900);
-      line-height: 1.18;
-      margin-bottom: 1.1rem;
-      padding-right: 2.5rem;
-    }
-
-    /* Divider */
-    #panel-divider {
-      width: 36px; height: 1px;
-      background: var(--p400);
-      opacity: 0.45;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--purple);
+      line-height: 1.25;
       margin-bottom: 1.1rem;
     }
 
-    /* Body */
     #panel-body {
-      font-family: 'Inter', sans-serif;
       font-size: 0.875rem;
       font-weight: 300;
-      line-height: 1.82;
-      color: var(--p700);
+      line-height: 1.8;
+      color: var(--purple-mid);
     }
 
-    #panel-body p + p { margin-top: 0.9rem; }
+    #panel-body p + p { margin-top: 0.85rem; }
 
-    /* Quote */
     #panel-quote {
-      position: relative;
-      margin-top: 1.4rem;
-      padding: 1.1rem 1.3rem 1.1rem 1.8rem;
-      background: rgba(74,47,143,0.05);
-      border-left: 2px solid var(--p500);
-    }
-
-    #panel-quote::before {
-      content: '\201C';
-      position: absolute;
-      top: -0.3rem; left: 0.35rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 3.2rem;
-      line-height: 1;
-      color: var(--p400);
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    #panel-quote p {
-      font-family: 'Playfair Display', serif;
-      font-size: 0.88rem;
+      margin-top: 1.3rem;
+      padding: 0.85rem 1.1rem 0.85rem 1.3rem;
+      border-left: 1.5px solid var(--purple-light);
+      font-size: 0.825rem;
+      font-weight: 300;
       font-style: italic;
-      color: var(--p600);
-      line-height: 1.72;
+      color: var(--purple-light);
+      line-height: 1.7;
     }
 
-    /* Connected nodes */
-    #panel-connections {
-      margin-top: 1.4rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.35rem;
+    /* Overlay */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      background: rgba(45, 27, 105, 0.07);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
-    .conn-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--p400);
-      margin-right: 0.1rem;
-      flex-shrink: 0;
-    }
-
-    .conn-tag {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 400;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--p500);
-      border: 1px solid rgba(107,79,184,0.22);
-      background: rgba(107,79,184,0.05);
-      padding: 0.18rem 0.5rem;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .conn-tag:hover {
-      background: rgba(107,79,184,0.12);
-      color: var(--p700);
+    #overlay.visible {
+      opacity: 1;
+      pointer-events: all;
     }
   </style>
 </head>
@@ -349,378 +199,324 @@
 
 <header>
   <h1>Society of Mind</h1>
-  <div class="header-meta">
-    <span class="header-rule"></span>
-    Marvin Minsky &middot; 1986
-  </div>
+  <p>Marvin Minsky &middot; 1986</p>
 </header>
 
-<div id="badge">28 Agents</div>
-
-<div id="hint">
-  <span class="hint-dot"></span>
-  Select a node to explore
-  <span class="hint-dot"></span>
-</div>
+<div id="hint">Select a node to explore</div>
 
 <div id="overlay"></div>
 
 <div id="panel">
-  <div id="panel-accent"></div>
-  <button id="panel-close" aria-label="Close">&#215;</button>
+  <button id="panel-close">&#215;</button>
   <div id="panel-scroll">
     <div id="panel-chapter"></div>
     <div id="panel-title"></div>
-    <div id="panel-divider"></div>
     <div id="panel-body"></div>
-    <div id="panel-quote"><p id="panel-quote-text"></p></div>
-    <div id="panel-connections"></div>
+    <div id="panel-quote"></div>
   </div>
 </div>
 
 <script>
-/* ─── Data ──────────────────────────────────────────── */
 const NODES = [
   {
-    id:0, label:"Agents",
-    chapter:"Chapter 1 — Building Blocks",
-    title:"Agents",
-    body:`<p>An agent is any process within the mind that has a specific, narrow function. Individually, agents are mindless — each one does something small and mechanical, requiring no intelligence of its own.</p><p>What makes mind remarkable is not any single agent but the intricate web of interactions among thousands of them. Intelligence is not a property of any part, but an emergent property of the whole society.</p>`,
-    quote:`"Each mental agent by itself can only do a simple thing that needs no mind or thought at all."`,
-    connections:[1,2,5,14,25]
+    id: 0, label: "Agents",
+    chapter: "Chapter 1 — Building Blocks",
+    title: "Agents",
+    body: `<p>An agent is any process that has a specific function within the mind. Agents are individually simple — each one does something narrow and mechanical. None of them is "intelligent" in isolation.</p><p>What makes mind remarkable is not any single agent but the intricate web of interactions among thousands of them. Intelligence is not a property of any part, but of the whole society.</p>`,
+    quote: `"Each mental agent by itself can only do a simple thing that needs no mind or thought at all."`,
+    connections: [1, 2, 5, 14, 25]
   },
   {
-    id:1, label:"Society",
-    chapter:"Chapter 1 — Building Blocks",
-    title:"The Society of Mind",
-    body:`<p>The mind works like a society: many agents, each with limited function, interacting to produce behavior no single member could achieve alone. There is no central authority, no master agent in charge.</p><p>Just as no single citizen makes a city intelligent, no single neuron makes a mind conscious. The structure of the whole is what matters — the pattern of connections, not the parts themselves.</p>`,
-    quote:`"You can build a mind from many little parts, each mindless by itself."`,
-    connections:[0,2,8,22,26]
+    id: 1, label: "Society",
+    chapter: "Chapter 1 — Building Blocks",
+    title: "The Society of Mind",
+    body: `<p>The mind works like a society: many agents, each with their own limited function, interacting to produce behavior that no single member could achieve alone. There is no central authority.</p><p>Just as no single citizen makes a city intelligent, no single neuron or agent makes a mind conscious. The structure of the whole is what matters.</p>`,
+    quote: `"You can build a mind from many little parts, each mindless by itself."`,
+    connections: [0, 2, 8, 22, 26]
   },
   {
-    id:2, label:"Builder",
-    chapter:"Chapter 1 — Building Blocks",
-    title:"Builder & Subagents",
-    body:`<p>Minsky illustrates agent hierarchy with Builder — an agent whose job is to build a block tower. Builder itself does nothing concrete; it manages subagents: Add, Move, Get, Find, Pick-up, Put-down.</p><p>Each subagent handles one task. Builder only cares whether the tower grows. This hierarchical delegation is the fundamental pattern of all intelligent organization — in minds and in institutions alike.</p>`,
-    quote:`"Builder's agents know nothing of each other's work. Builder only sees if the tower grows."`,
-    connections:[0,13,19,25]
+    id: 2, label: "Builder",
+    chapter: "Chapter 1 — Building Blocks",
+    title: "Builder & Subagents",
+    body: `<p>Minsky uses the example of Builder — an agent whose job is to build a block tower. Builder itself doesn't know how to do anything specific; it manages subagents: Add, Move, Get, Find, Pick-up, Put-down.</p><p>Each subagent does one thing. Builder orchestrates them. This hierarchy is the basic pattern of all mental organization.</p>`,
+    quote: `"Builder's agents know nothing of each other's work. Builder only sees if the tower grows."`,
+    connections: [0, 13, 19, 25]
   },
   {
-    id:3, label:"K-lines",
-    chapter:"Chapter 8 — A Theory of Memory",
-    title:"Knowledge Lines",
-    body:`<p>A K-line is a wire-like structure that links together all the agents active when you learned something or had a useful thought. Later, activating the K-line re-creates the same partial state of mind — you enter a remembered way of thinking.</p><p>K-lines explain how a smell can summon an entire memory, or why solving one problem makes related problems easier. Learning is the formation of K-lines; recalling is their re-activation.</p>`,
-    quote:`"When you 'get an idea,' a new K-line forms to record which agents were involved."`,
-    connections:[0,4,9,16,24]
+    id: 3, label: "K-lines",
+    chapter: "Chapter 8 — A Theory of Memory",
+    title: "Knowledge Lines (K-lines)",
+    body: `<p>A K-line is a wire-like connection that links together all the agents that were active when you learned something or had a useful thought. When a K-line is activated later, it re-activates the same partial state of mind.</p><p>K-lines explain how we re-enter old mental states — how a smell can summon a memory, or why solving one problem makes similar problems easier.</p>`,
+    quote: `"When you 'get an idea,' a new K-line forms to record which agents were involved."`,
+    connections: [0, 4, 9, 16, 24]
   },
   {
-    id:4, label:"B-Brain",
-    chapter:"Chapter 6 — Insight",
-    title:"The B-Brain",
-    body:`<p>Imagine your brain is called the A-brain. Now imagine a second brain — the B-brain — whose inputs come entirely from the A-brain, not from the outside world. The B-brain thinks about thinking.</p><p>This is Minsky's model of self-reflection. Because the B-brain cannot perceive the world directly, it can be wrong about what the A-brain is really doing — which explains why introspection is so unreliable and why we confabulate so confidently.</p>`,
-    quote:`"The B-brain can watch the A-brain's work — but only see a shadow of it."`,
-    connections:[3,17,20,22]
+    id: 4, label: "B-Brain",
+    chapter: "Chapter 6 — Insight",
+    title: "The B-Brain",
+    body: `<p>Imagine your brain is called the A-brain. Now imagine a second brain — the B-brain — whose inputs come entirely from the A-brain rather than from the outside world. The B-brain thinks about thinking.</p><p>This is Minsky's model of self-reflection. The B-brain cannot perceive the world directly, so it can be wrong about what the A-brain is really doing. This explains the deep limits of introspection.</p>`,
+    quote: `"The B-brain can watch the A-brain's work — but only see a shadow of it."`,
+    connections: [3, 17, 20, 22]
   },
   {
-    id:5, label:"Frames",
-    chapter:"Chapter 24 — Frames of Mind",
-    title:"Frames",
-    body:`<p>A frame is a data structure representing a stereotyped situation — "entering a room," "a birthday party," "a face." Each frame has slots that can be filled with specific details, and default values for when information is absent.</p><p>Frames explain how we rapidly interpret new situations: we locate a familiar frame, then adjust its slots to fit particulars. Most understanding is this kind of pattern-matching — a form of controlled, productive hallucination.</p>`,
-    quote:`"We see with expectations, not just with eyes. Frames shape every perception."`,
-    connections:[0,6,7,10,21]
+    id: 5, label: "Frames",
+    chapter: "Chapter 24 — Frames of Mind",
+    title: "Frames",
+    body: `<p>A frame is a data structure that represents a stereotyped situation — like "entering a room" or "a birthday party." Each frame has slots that can be filled with specific details, and each slot has default values for when information is absent.</p><p>Frames explain how we rapidly interpret new situations: we find a familiar frame, then adjust it to fit the particulars. Most understanding is this kind of controlled hallucination.</p>`,
+    quote: `"We see with expectations, not just with eyes. Frames shape every perception."`,
+    connections: [0, 6, 7, 10, 21]
   },
   {
-    id:6, label:"Frame Arrays",
-    chapter:"Chapter 25 — Frame Arrays",
-    title:"Frame Arrays",
-    body:`<p>When we move our head or shift viewpoint, we don't re-interpret the world from scratch. Frame arrays are grids of frames — each representing a slightly different perspective on the same scene or object.</p><p>Switching between frames in the array is cheap and instantaneous. This is how we maintain the illusion of a stable, continuous world despite jerky eye movements and constantly shifting attention.</p>`,
-    quote:`"The mind maintains a gallery of frames — not one picture, but a connected array of views."`,
-    connections:[5,18,21]
+    id: 6, label: "Frame Arrays",
+    chapter: "Chapter 25 — Frame Arrays",
+    title: "Frame Arrays",
+    body: `<p>When we move our head or change viewpoint, we don't re-interpret the world from scratch. Frame arrays are grids of frames — each representing a slightly different perspective on the same scene.</p><p>Switching between frames in the array is cheap. This is how we maintain the illusion of a stable, continuous world even though our eyes make jerky movements and our attention constantly shifts.</p>`,
+    quote: `"The mind maintains a map of frames — not one picture, but a connected gallery."`,
+    connections: [5, 18, 21]
   },
   {
-    id:7, label:"Defaults",
-    chapter:"Chapter 12 — Learning Meaning",
-    title:"Default Assumptions",
-    body:`<p>Every frame carries default values — assumptions made in the absence of contrary information. When you hear "bird," you assume it can fly. When you enter a restaurant, you expect tables, a menu, and a server without being told.</p><p>Defaults are not errors; they are the efficient engine of cognition. The cost is that we are sometimes confidently wrong about things we haven't really examined. Most of what we "know" is inherited from defaults we've never tested.</p>`,
-    quote:`"We fill the world with assumptions. Mostly they serve us. Sometimes they bind us."`,
-    connections:[5,10,12,23]
+    id: 7, label: "Defaults",
+    chapter: "Chapter 12 — Learning Meaning",
+    title: "Default Assumptions",
+    body: `<p>Every frame has default values — assumptions we make in the absence of contrary information. When you hear "bird," you assume it can fly. When you enter a restaurant, you expect tables, a menu, a server.</p><p>Defaults are not errors; they are the efficient engine of cognition. Most of the time they're right. The cost is that we are sometimes confidently wrong about things we haven't really thought about.</p>`,
+    quote: `"We fill the world with assumptions. Mostly they serve us. Sometimes they bind us."`,
+    connections: [5, 10, 12, 23]
   },
   {
-    id:8, label:"Polynemes",
-    chapter:"Chapter 19 — Words and Ideas",
-    title:"Polynemes",
-    body:`<p>A polyneme is an agent that activates many different specialists simultaneously. When the concept "apple" is activated, the polyneme for apple fires agents for redness, roundness, sweetness, crunchiness — each in its own domain of expertise.</p><p>Words work as polynemes. They don't contain meaning; they broadcast activation to the agents who hold the meaning. This is why words mean different things in different contexts — the activated specialists differ.</p>`,
-    quote:`"A word does not hold meaning — it sends signals to the agents that do."`,
-    connections:[3,1,24,27]
+    id: 8, label: "Polynemes",
+    chapter: "Chapter 19 — Words and Ideas",
+    title: "Polynemes",
+    body: `<p>A polyneme is an agent that connects to many different agents across the mind simultaneously. When "apple" is activated, the polyneme for apple fires agents for redness, roundness, sweetness, crunchiness — each in its own domain.</p><p>Words work as polynemes. They don't contain meaning; they distribute activation across the specialists who hold the meaning.</p>`,
+    quote: `"A word does not hold meaning — it sends signals to the agents that do."`,
+    connections: [3, 1, 24, 27]
   },
   {
-    id:9, label:"Nemes",
-    chapter:"Chapter 8 — Memory",
-    title:"Nemes",
-    body:`<p>A neme is any agent whose activity represents something — a fact, a quality, an object — to other parts of the mind. Nemes are the atomic units of mental representation.</p><p>Complex thoughts are built from constellations of nemes activating together in particular patterns. The meaning of a thought is not in any single neme but in the relationship between many nemes firing at once.</p>`,
-    quote:`"Each neme carries a small piece of the world model, deep inside the mind."`,
-    connections:[3,8,0]
+    id: 9, label: "Nemes",
+    chapter: "Chapter 8 — Memory",
+    title: "Nemes",
+    body: `<p>A neme is any agent whose activity represents something to other parts of the mind. Nemes are the atomic units of mental representation — single agents that carry meaning by virtue of their connections and when they fire.</p><p>Complex thoughts are built from constellations of nemes activating together.</p>`,
+    quote: `"Each neme carries a small piece of the world model inside the mind."`,
+    connections: [3, 8, 0]
   },
   {
-    id:10, label:"Non-compromise",
-    chapter:"Chapter 3 — Conflict",
-    title:"The Principle of Non-Compromise",
-    body:`<p>When two agents conflict, the mind often cannot find a middle ground. If one agent says "turn left" and another says "turn right," going straight is not a compromise — it is a third, unrelated action that satisfies neither.</p><p>Mental conflicts are usually resolved by one agent suppressing the other, or by a higher-level agent choosing between them. This is why decisions can feel sudden and total — there is no blending, only winning and losing.</p>`,
-    quote:`"In most mental conflicts, there is no compromise. One side wins; the other is silenced."`,
-    connections:[11,15,22,1]
+    id: 10, label: "Non-compromise",
+    chapter: "Chapter 3 — Conflict and Compromise",
+    title: "The Principle of Non-Compromise",
+    body: `<p>When two agents conflict, the mind often cannot find a middle ground. If one agent says "turn left" and another says "turn right," going straight is not a compromise — it's a third, unrelated action.</p><p>Mental conflicts are often resolved not by averaging but by one agent suppressing the other, or by a higher-level agent choosing between them. This is why decisions can feel sudden and total.</p>`,
+    quote: `"In most mental conflicts, there is no compromise. One side wins; the other is silenced."`,
+    connections: [11, 15, 22, 1]
   },
   {
-    id:11, label:"Censors",
-    chapter:"Chapter 27 — Censors and Jokes",
-    title:"Censors",
-    body:`<p>Censors are agents whose job is to suppress other agents. They don't generate behavior — they prevent it. A censor might block an idea before it reaches consciousness, or inhibit an action before it begins.</p><p>Humor often works by momentarily bypassing censors — allowing a normally-suppressed thought to surface before the censor can respond. Comedy is the censor's brief vacation, a flash of forbidden cognition before the gates close again.</p>`,
-    quote:`"The censor does not create — it forbids. Most of what we might think, we never think."`,
-    connections:[10,20,26,15]
+    id: 11, label: "Censors",
+    chapter: "Chapter 27 — Censors and Jokes",
+    title: "Censors",
+    body: `<p>Censors are agents whose job is to suppress other agents. They don't generate behavior — they prevent it. A censor might block an idea before it reaches consciousness, or inhibit an action before it begins.</p><p>Jokes often work by momentarily bypassing censors — allowing a normally-forbidden thought to surface before the censor can respond. Humor is the censor's brief vacation.</p>`,
+    quote: `"The censor does not create — it forbids. Most of what we might think, we never think."`,
+    connections: [10, 20, 26, 15]
   },
   {
-    id:12, label:"The Self",
-    chapter:"Chapter 4 — Self",
-    title:"The Self",
-    body:`<p>There is no single agent in the mind that is "the self." The feeling of being a unified, continuous self is itself produced by agents — it is a model the mind builds of itself, not a real unified thing underneath it all.</p><p>The self-model is useful: it helps the mind predict its own behavior and coordinate its agents. But mistaking the model for reality — believing there truly is a little person in charge — is the homunculus fallacy.</p>`,
-    quote:`"The 'self' is not a thing but a society's story about itself."`,
-    connections:[4,17,20,22,1]
+    id: 12, label: "The Self",
+    chapter: "Chapter 4 — Self",
+    title: "The Self",
+    body: `<p>There is no single agent in the mind that is "the self." The feeling of being a unified self is itself produced by agents — it is a model the mind builds of itself, not a real unified thing.</p><p>The self-model is useful: it lets the mind predict its own behavior. But mistaking the model for the reality — thinking there truly is a little person inside — is the homunculus fallacy.</p>`,
+    quote: `"The 'self' is not a thing but a society's story about itself."`,
+    connections: [4, 17, 20, 22, 1]
   },
   {
-    id:13, label:"Subgoals",
-    chapter:"Chapter 7 — Problems and Goals",
-    title:"Subgoals",
-    body:`<p>Any complex goal must be decomposed into subgoals. Higher-level agents handle this decomposition and assign subgoals to lower-level specialists. The lower level doesn't know about the larger goal — it only knows its piece.</p><p>This hierarchical decomposition is why intelligence can emerge without any single part having a complete picture. Each agent only solves its own small problem, yet complex goals get achieved through the aggregate.</p>`,
-    quote:`"The agent that builds doesn't know why it builds. It only knows: place block here."`,
-    connections:[2,0,19,25]
+    id: 13, label: "Subgoals",
+    chapter: "Chapter 7 — Problems and Goals",
+    title: "Subgoals",
+    body: `<p>Any complex goal must be broken into subgoals. But who does the breaking? Higher-level agents decompose goals and assign them to lower-level specialists. The lower level doesn't know about the larger goal.</p><p>This hierarchical decomposition is why intelligent behavior can emerge without any part needing a complete picture. Each agent only solves its own small problem.</p>`,
+    quote: `"The agent that builds doesn't know why it builds. It only knows: place block here."`,
+    connections: [2, 0, 19, 25]
   },
   {
-    id:14, label:"Levels",
-    chapter:"Chapter 10 — Levels",
-    title:"Level-bands",
-    body:`<p>Agents are organized in levels. High-level agents deal with abstract goals and long time horizons. Low-level agents handle immediate sensory or motor details. Mid-level agents translate between the two.</p><p>Each level speaks a different language. The high-level agent says "build the tower." By the time the signal reaches the agents controlling muscles, it has become something like "increase tension in fiber group 37 by 12%."</p>`,
-    quote:`"The mind is a tower of languages, each translating for the ones above and below."`,
-    connections:[0,2,13,25]
+    id: 14, label: "Levels",
+    chapter: "Chapter 10 — Levels",
+    title: "Level-bands",
+    body: `<p>Agents are organized in levels. High-level agents are concerned with abstract goals and long time horizons. Low-level agents handle immediate sensory or motor specifics. Mid-level agents translate between the two.</p><p>Each level speaks a different "language." The high-level agent says "build a tower." By the time the signal reaches the muscle-controlling agents, it has become "increase tension in fiber group 37."</p>`,
+    quote: `"The mind is a tower of languages, each translating for the ones above and below."`,
+    connections: [0, 2, 13, 25]
   },
   {
-    id:15, label:"Reactance",
-    chapter:"Chapter 3 — Conflict",
-    title:"Reactance & Frustration",
-    body:`<p>When an agent is blocked from achieving its goal, it doesn't simply stop. It tries alternative strategies, increases urgency, or recruits other agents. This persistent redirection is reactance.</p><p>Frustration arises when reactance fails repeatedly. The blocked agent's growing urgency can disrupt surrounding processes — a model for how emotional frustration in humans spreads from a specific block into unrelated areas of thought and behavior.</p>`,
-    quote:`"A blocked agent does not accept defeat — it searches, recruits, and persists."`,
-    connections:[10,13,11,19]
+    id: 15, label: "Reactance",
+    chapter: "Chapter 3 — Conflict",
+    title: "Reactance & Frustration",
+    body: `<p>When an agent is blocked from achieving its goal, it doesn't simply stop. It may try alternative strategies, increase its urgency, or recruit other agents. This persistent redirection is called reactance.</p><p>Frustration arises when reactance fails repeatedly. The blocked agent's growing urgency can disrupt surrounding processes — a model for how human frustration spreads into unrelated areas of behavior.</p>`,
+    quote: `"A blocked agent does not accept defeat — it searches, recruits, and persists."`,
+    connections: [10, 13, 11, 19]
   },
   {
-    id:16, label:"Memory",
-    chapter:"Chapter 15 — Consciousness",
-    title:"Memory Types",
-    body:`<p>Minsky distinguishes memory not by duration (short vs. long term) but by mechanism. K-line memory re-activates agent states. Iconic memory holds brief sensory images. Narrative memory stores sequences of K-line activations as story-like structures.</p><p>Memory is not a storage device — it is a set of re-activation mechanisms. To remember is to partially re-create a past mental state, always imperfectly, always shaped by the present.</p>`,
-    quote:`"To remember is not to retrieve — it is to rebuild, imperfectly, a former self."`,
-    connections:[3,5,24,9]
+    id: 16, label: "Memory",
+    chapter: "Chapter 15 — Consciousness",
+    title: "Memory Types",
+    body: `<p>Minsky distinguishes memory not by duration (short vs. long term) but by mechanism. K-line memory re-activates agent states. Iconic memory holds sensory images briefly. Narrative memory stores sequences of K-lines.</p><p>Memory is not a storage device — it is a set of re-activation mechanisms. To remember is to partially re-create a past mental state.</p>`,
+    quote: `"To remember is not to retrieve — it is to rebuild, imperfectly, a former self."`,
+    connections: [3, 5, 24, 9]
   },
   {
-    id:17, label:"Introspection",
-    chapter:"Chapter 6 — Insight",
-    title:"Limits of Introspection",
-    body:`<p>We cannot directly observe our own mental processes. The B-brain watches the A-brain's outputs, not its internal mechanics. When we report on why we made a decision, we are often confabulating — telling a plausible story rather than reporting an actual fact.</p><p>This is why people are so confidently wrong about their own motivations. Verbal reports of mental states are best understood as the B-brain's best guess about what the A-brain was doing — not direct observation.</p>`,
-    quote:`"Introspection reveals only a small part of what the mind is doing — and distorts even that."`,
-    connections:[4,12,22,20]
+    id: 17, label: "Introspection",
+    chapter: "Chapter 6 — Insight",
+    title: "Limits of Introspection",
+    body: `<p>We cannot directly observe our own mental processes. The B-brain can only watch the A-brain's outputs, not its internal mechanics. So when we report on why we made a decision, we are often confabulating — telling a plausible story rather than reporting a fact.</p><p>This explains why people are so confidently wrong about their own motivations and why verbal reports of mental states must be treated with caution.</p>`,
+    quote: `"Introspection reveals only a small part of what the mind is doing — and distorts even that."`,
+    connections: [4, 12, 22, 20]
   },
   {
-    id:18, label:"Space",
-    chapter:"Chapter 11 — Shape of Space",
-    title:"Spatial Reasoning",
-    body:`<p>The mind has specialized agencies for representing and reasoning about space. These don't work like a camera — spatial representations are functional and action-oriented. "Where things are" is encoded in terms of how you would reach or move toward them.</p><p>Multiple spatial frames operate simultaneously: body-centered, room-centered, object-centered. Frame arrays allow smooth transitions between these views, maintaining the sense of a stable, navigable world.</p>`,
-    quote:`"Space is not perceived — it is constructed, by agencies built for action, not for seeing."`,
-    connections:[5,6,21]
+    id: 18, label: "Space",
+    chapter: "Chapter 11 — Shape of Space",
+    title: "Spatial Reasoning",
+    body: `<p>The mind has specialized agencies for representing and reasoning about space. These don't work like a camera — spatial representations are functional and action-oriented. We represent "where things are" in terms of how we would reach or move toward them.</p><p>Different spatial frames can be maintained simultaneously: body-centered, room-centered, object-centered. Frame arrays switch smoothly between these views.</p>`,
+    quote: `"Space is not perceived — it is constructed, by agencies built for action, not for seeing."`,
+    connections: [5, 6, 21]
   },
   {
-    id:19, label:"Difference-Engines",
-    chapter:"Chapter 7 — Goals",
-    title:"Difference-Engines",
-    body:`<p>A difference-engine is an agent that detects a discrepancy between the current state and a goal state, then acts to reduce that discrepancy. This simple mechanism drives most purposeful behavior.</p><p>Goal-directed action doesn't require a complete plan — only the ability to sense what is wrong and take a step toward making it less wrong. This is the minimal architecture of striving: perceive gap, reduce gap, repeat.</p>`,
-    quote:`"Goals are not blueprints — they are complaints about the present state of things."`,
-    connections:[13,15,2,0]
+    id: 19, label: "Difference-Engines",
+    chapter: "Chapter 7 — Goals",
+    title: "Difference-Engines",
+    body: `<p>A difference-engine is an agent that detects a discrepancy between the current state and a goal state, then acts to reduce that discrepancy. This simple mechanism drives most purposeful behavior.</p><p>Goal-directed action doesn't require a complete plan — only the ability to sense what is wrong and take a step toward making it less wrong. This is the minimal architecture of striving.</p>`,
+    quote: `"Goals are not blueprints — they are complaints about the present state of things."`,
+    connections: [13, 15, 2, 0]
   },
   {
-    id:20, label:"Consciousness",
-    chapter:"Chapter 15 — Consciousness",
-    title:"Consciousness",
-    body:`<p>Minsky is skeptical of consciousness as a special substance or property. Instead, consciousness is what certain information-processing activities feel like from within — more precisely, what gets reported by the B-brain as it observes the A-brain's activities.</p><p>There is no single seat of consciousness. Different kinds of awareness correspond to different agent activities. The felt unity of consciousness is yet another useful model the mind builds of itself — not a literal fact about its architecture.</p>`,
-    quote:`"Consciousness is not a place in the brain — it is a process that watches other processes."`,
-    connections:[4,12,17,11,1]
+    id: 20, label: "Consciousness",
+    chapter: "Chapter 15 — Consciousness",
+    title: "Consciousness",
+    body: `<p>Minsky is skeptical of consciousness as a special substance or property. Instead, consciousness is what certain information-processing activities feel like from the inside — or more precisely, what gets reported by the B-brain as it observes the A-brain.</p><p>There is no single seat of consciousness. Different kinds of "being aware" correspond to different agent activities. The unity of consciousness is another useful illusion.</p>`,
+    quote: `"Consciousness is not a place in the brain — it is a process that watches other processes."`,
+    connections: [4, 12, 17, 11, 1]
   },
   {
-    id:21, label:"Trans-frames",
-    chapter:"Chapter 21 — Trans-frames",
-    title:"Trans-frames",
-    body:`<p>A trans-frame represents a transition — the before and after of an action or event. It captures: who acts, on what, using what, causing what change, from what initial state, to what final state.</p><p>Trans-frames are the basic unit of narrative and causal understanding. Stories are chains of trans-frames. Verbs activate trans-frames. To understand an action is to fill in a trans-frame's slots — to grasp what changed and why.</p>`,
-    quote:`"Every action has a before and after. The mind holds both together in a trans-frame."`,
-    connections:[5,6,27,8]
+    id: 21, label: "Trans-frames",
+    chapter: "Chapter 21 — Trans-frames",
+    title: "Trans-frames",
+    body: `<p>A trans-frame represents a transition — the before and after of an action or event. It captures: who acts, on what, with what instrument, causing what change, starting from what state, ending in what state.</p><p>Trans-frames are the basic units of narrative and causal understanding. Stories are chains of trans-frames. Verbs activate trans-frames. Understanding an action means filling in the trans-frame's slots.</p>`,
+    quote: `"Every action has a before and after. The mind holds both together in a trans-frame."`,
+    connections: [5, 6, 27, 8]
   },
   {
-    id:22, label:"Homunculus",
-    chapter:"Chapter 4 — Self",
-    title:"The Homunculus Problem",
-    body:`<p>The homunculus fallacy is the mistake of explaining the mind by positing a "little person inside" who does the understanding. But that little person needs its own little person to do its understanding, and so on forever — an infinite regress.</p><p>Minsky's Society of Mind dissolves this problem: what looks like a single observer is actually built from many agents, none of which requires a homunculus of its own. Understanding emerges from structure, not from a central knower.</p>`,
-    quote:`"If you need a little man in the head to explain the mind, you have explained nothing."`,
-    connections:[12,1,4,20]
+    id: 22, label: "Homunculus",
+    chapter: "Chapter 4 — Self",
+    title: "The Homunculus Problem",
+    body: `<p>The homunculus fallacy is the mistake of explaining the mind by positing a "little person inside" who does the understanding. But that little person needs its own little person, and so on forever.</p><p>Minsky's society of mind avoids this by showing that what looks like a single observer is actually built from many agents, none of which requires a homunculus of its own. Understanding emerges from structure, not from a central knower.</p>`,
+    quote: `"If you need a little man in the head to explain the mind, you have explained nothing."`,
+    connections: [12, 1, 4, 20]
   },
   {
-    id:23, label:"Learning",
-    chapter:"Chapter 17 — Development",
-    title:"Learning",
-    body:`<p>Learning, for Minsky, is primarily the formation of new K-lines and modification of connections between agents. When something works, the agents involved get linked — future problems activating some of them will tend to activate the rest.</p><p>Much learning is not conscious. New default assumptions form silently. Agencies reconfigure themselves based on success and failure without any central supervisor determining what has been learned. The mind learns most when it isn't looking.</p>`,
-    quote:`"Learning is not the filling of a vessel — it is the rewiring of a network."`,
-    connections:[3,7,9,24]
+    id: 23, label: "Learning",
+    chapter: "Chapter 17 — Development",
+    title: "Learning",
+    body: `<p>Learning, for Minsky, is primarily about forming new K-lines and modifying the connections between agents. When something works, the agents involved get linked — future problems that activate some of them will tend to activate the rest.</p><p>Much learning is not conscious. New default assumptions form silently. Agencies reconfigure themselves based on success and failure without any central supervisor deciding what has been learned.</p>`,
+    quote: `"Learning is not the filling of a vessel — it is the rewiring of a network."`,
+    connections: [3, 7, 9, 24]
   },
   {
-    id:24, label:"Papert's Principle",
-    chapter:"Chapter 10 — Levels",
-    title:"Papert's Principle",
-    body:`<p>Named for Seymour Papert, this principle states: some of the most critical steps in mental growth are not about learning new skills, but about building new administrative processes that organize the skills you already have.</p><p>A child may know how to count and how to recognize objects, yet still struggle to count objects — because the administrative agency coordinating the two hasn't yet formed. New capability sometimes means new management, not new knowledge.</p>`,
-    quote:`"Progress often comes not from new knowledge but from new ways of organizing old knowledge."`,
-    connections:[14,23,2,13]
+    id: 24, label: "Papert's Principle",
+    chapter: "Chapter 10 — Levels",
+    title: "Papert's Principle",
+    body: `<p>Named for Seymour Papert, this principle states: some of the most critical steps in mental growth are not about learning new skills, but about building new administrative processes that organize the skills you already have.</p><p>A child may already know how to count and how to recognize objects, but still struggle to count objects — because the administrative agency that coordinates the two hasn't formed yet. New capability sometimes means new management, not new knowledge.</p>`,
+    quote: `"Progress often comes not from new knowledge but from new ways of organizing old knowledge."`,
+    connections: [14, 23, 2, 13]
   },
   {
-    id:25, label:"Instincts",
-    chapter:"Chapter 5 — Individuality",
-    title:"Instincts",
-    body:`<p>Instincts are agents built in by evolution rather than learned from experience. They come pre-wired and ready to activate in response to specific triggers — hunger, fear, attraction, pain, the sound of a baby crying.</p><p>Instinctive agents are not necessarily simple in mechanism, but they operate independently of conscious deliberation. They are the ancient part of the society — agents recruited by evolution long before individuals could think or choose.</p>`,
-    quote:`"Instincts are ancient agents — recruited by evolution long before we could think."`,
-    connections:[0,26,10,15]
+    id: 25, label: "Instincts",
+    chapter: "Chapter 5 — Individuality",
+    title: "Instincts",
+    body: `<p>Instincts are agents built in by evolution rather than learned from experience. They come pre-wired and ready to activate in response to specific triggers — hunger, fear, attraction, pain.</p><p>Instinctive agents are not necessarily simple, but they operate independently of conscious deliberation. They are the part of the society that predates the individual.</p>`,
+    quote: `"Instincts are ancient agents — recruited by evolution long before we could think."`,
+    connections: [0, 26, 10, 15]
   },
   {
-    id:26, label:"Emotion",
-    chapter:"Chapter 16 — Emotion",
-    title:"Emotion",
-    body:`<p>Emotions are not opposed to thinking — they are a kind of thinking. An emotional state is a configuration of agents that biases the rest of the mind: fear suppresses exploration and amplifies threat-detection; joy does the reverse.</p><p>Minsky rejects the idea that emotions are irrational interruptions to reason. They are high-level control signals that shift the mind's entire operating mode — tuning the society as a whole toward different kinds of activity.</p>`,
-    quote:`"Emotions are not the enemy of reason — they are reason's older, cruder, more urgent cousin."`,
-    connections:[25,11,15,20,12]
+    id: 26, label: "Emotion",
+    chapter: "Chapter 16 — Emotion",
+    title: "Emotion",
+    body: `<p>Emotions are not opposed to thinking — they are a kind of thinking. An emotional state is a configuration of agents that biases the rest of the mind: fear suppresses exploration and amplifies threat-detection; joy amplifies engagement and exploration.</p><p>Minsky rejects the idea that emotions are irrational interruptions. They are high-level control signals that shift the mind's operating mode.</p>`,
+    quote: `"Emotions are not the enemy of reason — they are reason's older, cruder cousin."`,
+    connections: [25, 11, 15, 20, 12]
   },
   {
-    id:27, label:"Language",
-    chapter:"Chapter 22 — Expression",
-    title:"Language",
-    body:`<p>Words are not containers for meaning — they are signals that recruit agents. "Apple" doesn't carry redness or sweetness; it activates the agents that represent those qualities. This is why the same word means different things in different contexts.</p><p>Language works because speaker and listener share enough agent structure that the same word activates similar clusters of agents in both minds. Communication is approximate synchronization of mental states — never perfect, always partial.</p>`,
-    quote:`"Words are not meanings — they are invitations to build meanings from within."`,
-    connections:[8,21,9,1,5]
+    id: 27, label: "Language",
+    chapter: "Chapter 22 — Expression",
+    title: "Language",
+    body: `<p>Words are not containers for meaning — they are signals that recruit agents. The word "apple" doesn't carry redness or sweetness; it activates the agents that represent those things. This is why the same word means different things in different contexts.</p><p>Language works because speaker and listener share enough agent structure that the same word activates similar clusters of agents in both minds. Communication is approximate synchronization of agent states.</p>`,
+    quote: `"Words are not meanings — they are invitations to build meanings from within."`,
+    connections: [8, 21, 9, 1, 5]
   }
 ];
 
-/* ─── Edges ─────────────────────────────────────────── */
-const edgeSet = new Set();
-NODES.forEach(n => n.connections.forEach(c => {
-  edgeSet.add([Math.min(n.id,c), Math.max(n.id,c)].join('-'));
-}));
-const EDGES = [...edgeSet].map(k => k.split('-').map(Number));
+// Build connection set
+const connectionSet = new Set();
+NODES.forEach(n => {
+  n.connections.forEach(c => {
+    const key = [Math.min(n.id, c), Math.max(n.id, c)].join('-');
+    connectionSet.add(key);
+  });
+});
+const EDGES = [...connectionSet].map(k => k.split('-').map(Number));
 
-/* ─── Degree / radius ───────────────────────────────── */
-const degree = new Array(NODES.length).fill(0);
-EDGES.forEach(([a,b]) => { degree[a]++; degree[b]++; });
-const maxDeg = Math.max(...degree);
-const minDeg = Math.min(...degree);
-function nodeRadius(id) {
-  const t = (degree[id] - minDeg) / (maxDeg - minDeg || 1);
-  return 7 + t * 9; // 7 to 16
-}
-
-/* ─── Canvas ────────────────────────────────────────── */
+// Canvas setup
 const canvas = document.getElementById('canvas');
-const ctx    = canvas.getContext('2d');
-let W, H, dpr;
+const ctx = canvas.getContext('2d');
 
+let W, H, dpr;
 function resize() {
   dpr = window.devicePixelRatio || 1;
   W = window.innerWidth;
   H = window.innerHeight;
-  canvas.width  = W * dpr;
+  canvas.width = W * dpr;
   canvas.height = H * dpr;
-  canvas.style.width  = W + 'px';
+  canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
-  initNodes();
+  placeNodes();
 }
 
-/* ─── Physics nodes ─────────────────────────────────── */
+// Node positions & velocities
 let nodes = [];
-function initNodes() {
-  // Fibonacci spiral for even initial distribution
-  const phi = (1 + Math.sqrt(5)) / 2;
-  const n   = NODES.length;
-  const cx  = W / 2, cy = H / 2;
-  const rad = Math.min(W, H) * 0.34;
+function placeNodes() {
+  const margin = 100;
+  nodes = NODES.map((n, i) => ({
+    ...n,
+    x: margin + Math.random() * (W - margin * 2),
+    y: margin + Math.random() * (H - margin * 2),
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    r: 9,
+    hovered: false,
+    pulse: Math.random() * Math.PI * 2,
+    pulseSpeed: 0.008 + Math.random() * 0.008
+  }));
+}
 
-  nodes = NODES.map((nd, i) => {
-    const r     = Math.sqrt((i + 0.5) / n) * rad;
-    const theta = i * 2 * Math.PI / (phi * phi);
-    return {
-      ...nd,
-      x:  cx + r * Math.cos(theta),
-      y:  cy + r * Math.sin(theta),
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6,
-      r:  nodeRadius(nd.id),
-      phase: Math.random() * Math.PI * 2,
-      phaseSpeed: 0.006 + Math.random() * 0.006,
-      hovered: false,
-      targetR: nodeRadius(nd.id),
-      dispR: nodeRadius(nd.id),
-    };
+// Pulse particles along edges
+const particles = [];
+function spawnParticle(edgeIndex) {
+  const [a, b] = EDGES[edgeIndex];
+  particles.push({ a, b, t: 0, speed: 0.0015 + Math.random() * 0.002, edge: edgeIndex });
+}
+function seedParticles() {
+  EDGES.forEach((_, i) => {
+    if (Math.random() < 0.5) spawnParticle(i);
   });
 }
 
-/* ─── Particles ─────────────────────────────────────── */
-const particles = [];
-function spawnParticle(ei) {
-  const [a,b] = EDGES[ei];
-  const rev = Math.random() < 0.5;
-  particles.push({ a: rev?b:a, b: rev?a:b, t: 0,
-    speed: 0.0012 + Math.random() * 0.0018 });
-}
-function seedParticles() {
-  EDGES.forEach((_,i) => { if (Math.random()<0.45) spawnParticle(i); });
-}
-
-/* ─── State ─────────────────────────────────────────── */
 let selectedNode = null;
-let hoveredNode  = null;
-const mouse = { x: -9999, y: -9999 };
+let hoveredNode = null;
 
-/* ─── Panel ─────────────────────────────────────────── */
 const panel   = document.getElementById('panel');
 const overlay = document.getElementById('overlay');
 const hint    = document.getElementById('hint');
-let hintGone  = false;
+let hintHidden = false;
 
 function showPanel(node) {
   selectedNode = node;
-  document.getElementById('panel-chapter').textContent  = node.chapter;
-  document.getElementById('panel-title').textContent    = node.title;
-  document.getElementById('panel-body').innerHTML       = node.body;
-  document.getElementById('panel-quote-text').textContent = node.quote;
-
-  // Connected-to chips
-  const box = document.getElementById('panel-connections');
-  box.innerHTML = '';
-  const label = document.createElement('span');
-  label.className = 'conn-label';
-  label.textContent = 'Connected —';
-  box.appendChild(label);
-  node.connections.forEach(cid => {
-    const nd = NODES[cid];
-    if (!nd) return;
-    const chip = document.createElement('span');
-    chip.className = 'conn-tag';
-    chip.textContent = nd.label;
-    chip.addEventListener('click', () => showPanel(nodes[cid]));
-    box.appendChild(chip);
-  });
-
+  document.getElementById('panel-chapter').textContent = node.chapter;
+  document.getElementById('panel-title').textContent   = node.title;
+  document.getElementById('panel-body').innerHTML      = node.body;
+  document.getElementById('panel-quote').textContent   = node.quote;
   panel.classList.add('visible');
   overlay.classList.add('visible');
-  document.getElementById('panel-scroll').scrollTop = 0;
-
-  if (!hintGone) { hint.style.opacity = '0'; hintGone = true; }
+  if (!hintHidden) { hint.style.opacity = '0'; hintHidden = true; }
 }
 
 function hidePanel() {
@@ -733,264 +529,145 @@ document.getElementById('panel-close').addEventListener('click', hidePanel);
 overlay.addEventListener('click', hidePanel);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePanel(); });
 
-/* ─── Interaction ───────────────────────────────────── */
+const mouse = { x: -9999, y: -9999 };
+
 canvas.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 canvas.addEventListener('click', e => {
-  const hit = hitTest(e.clientX, e.clientY);
+  const hit = nodeAt(e.clientX, e.clientY);
   if (hit) showPanel(hit);
 });
 canvas.addEventListener('touchend', e => {
   const t = e.changedTouches[0];
-  const hit = hitTest(t.clientX, t.clientY);
+  const hit = nodeAt(t.clientX, t.clientY);
   if (hit) showPanel(hit);
   e.preventDefault();
 }, { passive: false });
 
-function hitTest(x, y) {
-  for (let i = nodes.length-1; i >= 0; i--) {
+function nodeAt(x, y) {
+  for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i];
-    const dx = n.x-x, dy = n.y-y;
-    if (dx*dx+dy*dy < (n.r+14)*(n.r+14)) return n;
+    const dx = n.x - x, dy = n.y - y;
+    if (dx * dx + dy * dy < (n.r + 10) * (n.r + 10)) return n;
   }
   return null;
 }
 
-/* ─── Colors ────────────────────────────────────────── */
-const C = {
-  node:      '#1E0F4A',
-  nodeHov:   '#4A2F8F',
-  nodeSel:   '#2D1B69',
-  nodeConn:  '#3D2580',
-  edgeDim:  [30,15,74],
-  edgeHov:  [74,47,143],
-  particle: [107,79,184],
-};
-const rgba = (rgb,a) => `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`;
+const COL_NODE     = '#2D1B69';
+const COL_NODE_HOV = '#6B4EAA';
+const COL_NODE_SEL = '#4A2F8F';
+const COL_CONN_DIM = [45, 27, 105];
+const COL_CONN_HOV = [74, 47, 143];
 
-/* ─── Draw loop ─────────────────────────────────────── */
-let lastT = 0;
+function rgba(rgb, a) { return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`; }
+
 function draw(ts) {
-  const dt = Math.min((ts - lastT) / 16.67, 3); // normalized to 60fps
-  lastT = ts;
-
   ctx.clearRect(0, 0, W, H);
 
-  /* Physics */
-  const margin = 70;
+  const margin = 60;
   nodes.forEach(n => {
-    n.phase += n.phaseSpeed;
+    n.pulse += n.pulseSpeed;
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < margin || n.x > W - margin) n.vx *= -1;
+    if (n.y < margin || n.y > H - margin) n.vy *= -1;
+    n.x = Math.max(margin, Math.min(W - margin, n.x));
+    n.y = Math.max(margin, Math.min(H - margin, n.y));
 
-    // Spring attraction along edges
-    EDGES.forEach(([ai, bi]) => {
-      if (ai !== n.id && bi !== n.id) return;
-      const other = nodes[ai === n.id ? bi : ai];
-      const dx = other.x - n.x, dy = other.y - n.y;
-      const d  = Math.sqrt(dx*dx+dy*dy) || 1;
-      const rest = 190;
-      const f = (d - rest) * 0.00012 * dt;
-      n.vx += (dx/d)*f;
-      n.vy += (dy/d)*f;
-    });
-
-    // Repulsion
     nodes.forEach(m => {
       if (m.id === n.id) return;
-      const dx = n.x-m.x, dy = n.y-m.y;
-      const d2 = dx*dx+dy*dy;
-      if (d2 < 8100) {
-        const d = Math.sqrt(d2)||1;
-        const f = 0.055 * dt / d;
-        n.vx += (dx/d)*f;
-        n.vy += (dy/d)*f;
+      const dx = n.x - m.x, dy = n.y - m.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < 6400) {
+        const d = Math.sqrt(d2) || 1;
+        const f = 0.04 / d;
+        n.vx += (dx / d) * f;
+        n.vy += (dy / d) * f;
       }
     });
 
-    // Dampen
-    n.vx *= 0.982;
-    n.vy *= 0.982;
+    const spd = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+    if (spd > 0.6) { n.vx *= 0.6 / spd; n.vy *= 0.6 / spd; }
 
-    // Speed cap
-    const spd = Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    const cap = 0.9;
-    if (spd > cap) { n.vx *= cap/spd; n.vy *= cap/spd; }
-
-    // Integrate
-    n.x += n.vx * dt;
-    n.y += n.vy * dt;
-
-    // Boundary
-    if (n.x < margin) { n.x = margin; n.vx = Math.abs(n.vx)*0.5; }
-    if (n.x > W-margin) { n.x = W-margin; n.vx = -Math.abs(n.vx)*0.5; }
-    if (n.y < margin) { n.y = margin; n.vy = Math.abs(n.vy)*0.5; }
-    if (n.y > H-margin) { n.y = H-margin; n.vy = -Math.abs(n.vy)*0.5; }
-
-    // Hover
-    const hdx = n.x-mouse.x, hdy = n.y-mouse.y;
-    n.hovered = hdx*hdx+hdy*hdy < (n.r+14)*(n.r+14);
-
-    // Animated radius
-    const isSelected = selectedNode && selectedNode.id === n.id;
-    const isConn = (hoveredNode && hoveredNode.connections.includes(n.id))
-                || (selectedNode && selectedNode.connections.includes(n.id));
-    const targetScale = isSelected ? 1.55 : n.hovered ? 1.32 : isConn ? 1.18 : 1;
-    const targetR = n.r * targetScale * (1 + Math.sin(n.phase) * 0.06);
-    n.dispR += (targetR - n.dispR) * 0.12 * dt;
+    const dx = n.x - mouse.x, dy = n.y - mouse.y;
+    n.hovered = dx * dx + dy * dy < (n.r + 10) * (n.r + 10);
   });
-
   hoveredNode = nodes.find(n => n.hovered) || null;
 
-  /* Particles */
-  for (let i = particles.length-1; i >= 0; i--) {
+  for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
-    p.t += p.speed * dt;
+    p.t += p.speed;
     if (p.t >= 1) { particles.splice(i, 1); continue; }
+    const na = nodes[p.a], nb = nodes[p.b];
+    if (!na || !nb) { particles.splice(i, 1); continue; }
   }
-  if (Math.random() < 0.05 && particles.length < 80) {
-    spawnParticle(Math.floor(Math.random()*EDGES.length));
+  if (Math.random() < 0.04 && particles.length < 60) {
+    spawnParticle(Math.floor(Math.random() * EDGES.length));
   }
 
-  /* Draw edges */
-  EDGES.forEach(([ai,bi]) => {
+  // Edges
+  EDGES.forEach(([ai, bi]) => {
     const na = nodes[ai], nb = nodes[bi];
-    if (!na||!nb) return;
-    const isH = (hoveredNode && (hoveredNode.id===ai||hoveredNode.id===bi))
-             || (selectedNode && (selectedNode.id===ai||selectedNode.id===bi));
-
-    // Gradient edge
-    const grd = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-    const a0 = isH ? 0.5 : 0.11;
-    const a1 = isH ? 0.5 : 0.11;
-    grd.addColorStop(0, rgba(isH ? C.edgeHov : C.edgeDim, a0));
-    grd.addColorStop(1, rgba(isH ? C.edgeHov : C.edgeDim, a1));
-
+    if (!na || !nb) return;
+    const isHighlighted = (hoveredNode && (hoveredNode.id === ai || hoveredNode.id === bi))
+                       || (selectedNode && (selectedNode.id === ai || selectedNode.id === bi));
     ctx.beginPath();
     ctx.moveTo(na.x, na.y);
     ctx.lineTo(nb.x, nb.y);
-    ctx.strokeStyle = grd;
-    ctx.lineWidth = isH ? 1.4 : 0.7;
+    ctx.strokeStyle = rgba(isHighlighted ? COL_CONN_HOV : COL_CONN_DIM, isHighlighted ? 0.45 : 0.14);
+    ctx.lineWidth = isHighlighted ? 1.5 : 0.8;
     ctx.stroke();
   });
 
-  /* Draw particles */
+  // Particles
   particles.forEach(p => {
     const na = nodes[p.a], nb = nodes[p.b];
-    if (!na||!nb) return;
-    const ease = Math.sin(p.t * Math.PI);
-    const x = na.x + (nb.x-na.x)*p.t;
-    const y = na.y + (nb.y-na.y)*p.t;
-
-    // Glow
-    const g = ctx.createRadialGradient(x,y,0, x,y,5);
-    g.addColorStop(0, rgba(C.particle, ease*0.7));
-    g.addColorStop(1, rgba(C.particle, 0));
+    if (!na || !nb) return;
+    const x = na.x + (nb.x - na.x) * p.t;
+    const y = na.y + (nb.y - na.y) * p.t;
+    const alpha = Math.sin(p.t * Math.PI) * 0.7;
     ctx.beginPath();
-    ctx.arc(x,y,5,0,Math.PI*2);
-    ctx.fillStyle = g;
-    ctx.fill();
-
-    // Core dot
-    ctx.beginPath();
-    ctx.arc(x,y,1.8,0,Math.PI*2);
-    ctx.fillStyle = rgba(C.particle, ease*0.85);
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(COL_CONN_HOV, alpha);
     ctx.fill();
   });
 
-  /* Draw nodes */
+  // Nodes
   nodes.forEach(n => {
     const isSelected = selectedNode && selectedNode.id === n.id;
     const isConn = (hoveredNode && hoveredNode.connections.includes(n.id))
                 || (selectedNode && selectedNode.connections.includes(n.id));
-    const r = n.dispR;
+    const pulse = 1 + Math.sin(n.pulse) * 0.12;
+    const r = n.r * (isSelected ? 1.5 : n.hovered ? 1.3 : isConn ? 1.15 : 1) * pulse;
 
-    // Outer glow ring
     if (isSelected || n.hovered) {
-      const g = ctx.createRadialGradient(n.x,n.y,r*0.8, n.x,n.y,r*4);
-      g.addColorStop(0, rgba(C.edgeHov, isSelected ? 0.22 : 0.14));
-      g.addColorStop(1, rgba(C.edgeHov, 0));
+      const grd = ctx.createRadialGradient(n.x, n.y, r * 0.5, n.x, n.y, r * 3.5);
+      grd.addColorStop(0, rgba(COL_CONN_HOV, 0.18));
+      grd.addColorStop(1, rgba(COL_CONN_HOV, 0));
       ctx.beginPath();
-      ctx.arc(n.x, n.y, r*4, 0, Math.PI*2);
-      ctx.fillStyle = g;
+      ctx.arc(n.x, n.y, r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
       ctx.fill();
     }
 
-    // Animated selection ring
-    if (isSelected) {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, r+4.5, 0, Math.PI*2);
-      ctx.strokeStyle = rgba([107,79,184], 0.4);
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 5]);
-      ctx.lineDashOffset = -(ts / 40);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-
-    // Connected ring
-    if (isConn && !isSelected) {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, r+3, 0, Math.PI*2);
-      ctx.strokeStyle = rgba([107,79,184], 0.2);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    // Fill — radial gradient for depth
-    const fill = ctx.createRadialGradient(
-      n.x - r*0.28, n.y - r*0.28, r*0.05,
-      n.x, n.y, r
-    );
-    if (isSelected) {
-      fill.addColorStop(0, '#6B4FB8');
-      fill.addColorStop(1, '#1E0F4A');
-    } else if (n.hovered) {
-      fill.addColorStop(0, '#7B60C4');
-      fill.addColorStop(1, '#2D1B69');
-    } else if (isConn) {
-      fill.addColorStop(0, '#4A2F8F');
-      fill.addColorStop(1, '#1E0F4A');
-    } else {
-      fill.addColorStop(0, '#3D2580');
-      fill.addColorStop(1, '#160A3A');
-    }
     ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
-    ctx.fillStyle = fill;
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = isSelected ? COL_NODE_SEL : n.hovered ? COL_NODE_HOV : isConn ? '#5B3FA0' : COL_NODE;
     ctx.fill();
 
-    // Specular highlight
-    const hl = ctx.createRadialGradient(
-      n.x - r*0.32, n.y - r*0.36, 0,
-      n.x - r*0.2,  n.y - r*0.2,  r*0.6
-    );
-    hl.addColorStop(0, 'rgba(255,255,255,0.12)');
-    hl.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
-    ctx.fillStyle = hl;
-    ctx.fill();
-
-    /* Label */
+    // Label
     const active = n.hovered || isSelected || isConn;
-    const fontSize = active ? 11.5 : 10;
-    ctx.font = `${active ? 500 : 300} ${fontSize}px Inter, sans-serif`;
-    const labelAlpha = active ? 0.95 : 0.55;
-    ctx.fillStyle = `rgba(22,10,58,${labelAlpha})`;
+    ctx.font = `${active ? 500 : 300} 11px 'Inter', sans-serif`;
+    ctx.fillStyle = `rgba(45,27,105,${active ? 1 : 0.65})`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    ctx.fillText(n.label, n.x, n.y + r + 5.5);
+    ctx.fillText(n.label, n.x, n.y + r + 5);
   });
 
   canvas.style.cursor = hoveredNode ? 'pointer' : 'default';
   requestAnimationFrame(draw);
 }
 
-/* ─── Boot ──────────────────────────────────────────── */
-window.addEventListener('resize', () => {
-  ctx.setTransform(1,0,0,1,0,0);
-  resize();
-});
-
-// Wait for fonts before first draw so canvas text uses Inter
+window.addEventListener('resize', () => { ctx.setTransform(1, 0, 0, 1, 0, 0); resize(); });
 document.fonts.ready.then(() => {
   resize();
   seedParticles();
